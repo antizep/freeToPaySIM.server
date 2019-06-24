@@ -13,11 +13,5 @@ public class PlayerUtill {
     public PlayerUtill() {
     }
 
-    public PlayerModel loadPlayer() {
-        return new PlayerModel();
-    }
 
-    public PlayerModel registration() {
-        return new PlayerModel();
-    }
 }

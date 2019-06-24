@@ -1,6 +1,7 @@
 package ru.ccoders.jpa.entity;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 @Table(name = "default_item", schema = "public", catalog = "postgres")
@@ -10,6 +11,7 @@ public class EntityDefaultItem {
     private int heal;
     private String name;
     private int id;
+    private Collection<EntityItems> itemsById;
 
     @Basic
     @Column(name = "sprite")
@@ -86,5 +88,14 @@ public class EntityDefaultItem {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + id;
         return result;
+    }
+
+    @OneToMany(mappedBy = "defaultItemByDefaultItem")
+    public Collection<EntityItems> getItemsById() {
+        return itemsById;
+    }
+
+    public void setItemsById(Collection<EntityItems> itemsById) {
+        this.itemsById = itemsById;
     }
 }

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import ru.ccoders.jpa.entity.EntityDefaultItem;
-import ru.ccoders.jpa.repository.ItemRepository;
+import ru.ccoders.jpa.repository.DefaultItemRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +12,10 @@ import java.util.List;
 @Service("jpaDefaultItem")
 @Repository
 public class DefaultItemDao {
-    private final ItemRepository repository;
+    private final DefaultItemRepository repository;
 
     @Autowired
-    public DefaultItemDao(ItemRepository repository) {
+    public DefaultItemDao(DefaultItemRepository repository) {
         this.repository = repository;
     }
 

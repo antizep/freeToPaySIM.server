@@ -5,6 +5,11 @@
 
 package ru.ccoders.model;
 
+import ru.ccoders.jpa.entity.EntityAccount;
+import ru.ccoders.jpa.entity.EntityItems;
+
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class PlayerModel {
@@ -15,7 +20,15 @@ public class PlayerModel {
 
     public PlayerModel() {
     }
-
+    public PlayerModel(EntityAccount account){
+        id = account.getId();
+        health = account.getHeal();
+        money = account.getMoney();
+        items = new HashSet<>();
+        for (EntityItems i: account.getItemsById()){
+            items.add(new ItemModel(i.getDefaultItemByDefaultItem(),i.getCount()));
+        }
+    }
     public int getId() {
         return this.id;
     }
@@ -46,5 +59,18 @@ public class PlayerModel {
 
     public void setItems(Set<ItemModel> items) {
         this.items = items;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PlayerModel)) return false;
+        PlayerModel model = (PlayerModel) o;
+        return id == model.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

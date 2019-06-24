@@ -9,9 +9,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ru.ccoders.model.Fight;
+import ru.ccoders.utill.FightUtil;
 
 @Api(
         value = "/fight",
@@ -29,10 +29,26 @@ public class FightController {
 
     @ApiOperation("Для сохранения версий")
     @RequestMapping(
-            value = {"/save"},
-            method = {RequestMethod.POST},
+            value = {"/searchFight"},
+            method = {RequestMethod.GET},
             produces = {"application/json;charset=UTF-8"}
     )
-    void saveVersion() {
+    public boolean searchEnemy(@RequestParam(name = "id") String id) {
+        FightUtil util = new FightUtil();
+        PlayerController controller = new PlayerController(ctx);
+
+        Fight myFight = util.searchFight(controller.load(Integer.parseInt(id)));
+        return (myFight.getPlayer1() != null && myFight.getPlayer2() != null);
+
     }
+    @ApiOperation("Использовать предмет")
+    @RequestMapping(value = "/{userId}/{id}")
+    public boolean useItem(@PathVariable(name = "userId") int userId,@PathVariable(name = "id") int id){
+
+
+
+        return false;
+    }
+
+
 }

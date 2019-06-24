@@ -13,6 +13,7 @@ import ru.ccoders.model.ItemModel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 public class ItemUtil {
 
@@ -41,6 +42,23 @@ public class ItemUtil {
         return im;
     }
 
+    public Set<ItemModel> addItemPath(ItemModel item, Set<ItemModel> items){
+        for (ItemModel itemModel: items){
+            if (itemModel.equals(item)){
+                itemModel.setCount(itemModel.getCount()+1);
+                return items;
+            }
+        }
+
+        items.add(item);
+        return items;
+    }
+    public EntityDefaultItem getByName(String name) throws Exception {
+        for (EntityDefaultItem item: defaultItems){
+            if(item.getName().equals(name)) return item;
+        }
+        throw new Exception("Обьект не найден");
+    }
     private void init(){
         EntityDefaultItem entityDefaultItem = new EntityDefaultItem();
         entityDefaultItem.setName("KNIFE");
