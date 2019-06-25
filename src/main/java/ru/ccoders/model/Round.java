@@ -1,8 +1,12 @@
 package ru.ccoders.model;
 
+import java.util.Date;
+
 public class Round {
     private ItemModel player1;
     private ItemModel player2;
+    private Boolean isEnd;
+    private Date startRound;
 
     public ItemModel getPlayer1() {
         return player1;

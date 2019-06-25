@@ -1,11 +1,12 @@
 package ru.ccoders.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Battle {
 
     private Fight fight;
-    private List<Round> round;
+    private List<Round> round = new ArrayList<>();
 
     public Fight getFight() {
         return fight;
@@ -17,10 +18,6 @@ public class Battle {
 
     public List<Round> getRound() {
         return round;
-    }
-
-    public void setRound(List<Round> round) {
-        this.round = round;
     }
 
 }

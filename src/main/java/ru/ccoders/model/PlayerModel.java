@@ -61,6 +61,14 @@ public class PlayerModel {
         this.items = items;
     }
 
+    public ItemModel getItemByItemId(int itemId) throws Exception {
+        for(ItemModel item: items){
+            if(item.getId() == itemId){
+                return item;
+            }
+        }
+        throw new Exception("Item not found");
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

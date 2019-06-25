@@ -60,10 +60,26 @@ public class FightUtil {
 
     }
 
-    public Battle useItem(PlayerModel model, ItemModel item){
+    public boolean useItem(PlayerModel model, ItemModel item){
         Fight fight = searchFight(model);
-        Battle battle = null;
+        if(fight == null){
+            return false;
+        }
+        Round actualRound = getLastRoundFromFight(fight);
 
+        if(fight.getPlayer2().equals(model)){
+            actualRound.setPlayer2(item);
+        }
+
+        if(fight.getPlayer1().equals(model)){
+            actualRound.setPlayer1(item);
+        }
+        return true;
+    }
+
+    private Battle getBattleFromFight(Fight fight){
+
+        Battle battle = null;
         for (Battle b:battles){
             if(b.getFight().equals(fight)){
                 battle = b;
@@ -71,25 +87,36 @@ public class FightUtil {
             }
         }
 
+        if(battle == null){
+            battle = new Battle();
+            battle.setFight(fight);
+            battles.add(battle);
+        }
+        return battle;
+    }
+
+    private Round getLastRoundFromFight(Fight fight){
+
+        Battle battle = getBattleFromFight(fight);
+
         List<Round> rounds = battle.getRound();
-        Round lastRound = rounds.get(rounds.size()-1);
+        Round lastRound;
+        if(rounds.size() > 0) {
+             lastRound = rounds.get(rounds.size() - 1);
+        }else {
+            lastRound = new Round();
+            rounds.add(lastRound);
+            return lastRound;
+        }
 
         Round actualRound;
         if(lastRound.getPlayer1()!=null && lastRound.getPlayer2() != null){
             actualRound = new Round();
+            rounds.add(actualRound);
         }else{
             actualRound = lastRound;
         }
-
-        if(battle.getFight().getPlayer2().equals(model)){
-            actualRound.setPlayer2(item);
-        }
-
-        if(battle.getFight().getPlayer1().equals(model)){
-            actualRound.setPlayer1(item);
-        }
-
-        return battle;
+        return actualRound;
     }
 
     private float power(PlayerModel playerModel) {
