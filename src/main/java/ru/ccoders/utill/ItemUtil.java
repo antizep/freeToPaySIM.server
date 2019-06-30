@@ -49,7 +49,7 @@ public class ItemUtil {
                 return items;
             }
         }
-
+        item.setCount(1);
         items.add(item);
         return items;
     }

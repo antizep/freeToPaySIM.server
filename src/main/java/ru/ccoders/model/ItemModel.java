@@ -16,7 +16,9 @@ public class ItemModel extends EntityDefaultItem {
     private int demage;
     private int heal;
     private String name;
+    private ItemModel(){
 
+    }
     public ItemModel(EntityDefaultItem defaultItem, int count) {
 
         this.count = count;
@@ -27,7 +29,15 @@ public class ItemModel extends EntityDefaultItem {
         name = defaultItem.getName();
 
     }
-
+    public static ItemModel clone(ItemModel im){
+        ItemModel cloneItem  = new ItemModel();
+        //cloneItem.setCount(im.getCount());
+        cloneItem.setDemage(im.demage);
+        cloneItem.setId(im.id);
+        cloneItem.setSprite(im.sprite);
+        cloneItem.setHeal(im.heal);
+        return cloneItem;
+    }
     public int getId() {
         return this.id;
     }

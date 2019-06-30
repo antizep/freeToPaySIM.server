@@ -9,6 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.ccoders.jpa.dao.DefaultItemDao;
 import ru.ccoders.jpa.dao.ItemDao;
@@ -42,7 +43,7 @@ public class ItemController {
     @RequestMapping(
             value = {"/random"},
             method = {RequestMethod.GET},
-            produces = {"application/json;charset=UTF-8"}
+            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE}
     )
     public ItemModel random() {
         ItemModel result = iu.getRandomItem();
@@ -54,7 +55,7 @@ public class ItemController {
     @RequestMapping(
             value = "/power",
             method = {RequestMethod.GET},
-            produces = {"application/json;charset=UTF-8"}
+            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE}
     )
     public Set<ItemModel> randomSet(@RequestParam("power") int power){
         Set<ItemModel> randomSet = new HashSet<>();
@@ -64,6 +65,7 @@ public class ItemController {
             iu.addItemPath(randModel,randomSet);
             totalPower += randModel.getDemage() + randModel.getHeal();
         }
+        System.out.println(totalPower+"<="+power);
         return randomSet;
     }
 
@@ -71,7 +73,7 @@ public class ItemController {
     @RequestMapping(
             value = "{name}",
             method = {RequestMethod.GET},
-            produces = {"application/json;charset=UTF-8"}
+            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE}
     )
     public EntityDefaultItem getItem(@PathVariable(name = "name")String name) throws Exception {
         return iu.getByName(name);
@@ -81,9 +83,10 @@ public class ItemController {
     @RequestMapping(
             value = "/add",
             method = RequestMethod.POST,
-            produces = {"application/json;charset=UTF-8"}
+            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE}
     )
     public List<EntityItems> addAll(List<EntityItems> items){
         return itemDao.savaAll(items);
     }
 }
+

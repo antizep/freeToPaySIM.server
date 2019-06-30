@@ -9,6 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,7 +19,7 @@ import ru.ccoders.jpa.dao.AccountDao;
 import ru.ccoders.jpa.entity.EntityAccount;
 import ru.ccoders.jpa.entity.EntityItems;
 import ru.ccoders.model.PlayerModel;
-import ru.ccoders.utill.ItemUtil;
+import ru.ccoders.utill.AIUtil;
 import ru.ccoders.utill.PlayerUtill;
 
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class PlayerController {
     @RequestMapping(
             value = {"/{id}"},
             method = {RequestMethod.GET},
-            produces = {"application/json;charset=UTF-8"}
+            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE}
     )
     public PlayerModel load(@PathVariable int id) {
         return new PlayerModel(accountDao.load(id));
@@ -55,7 +56,7 @@ public class PlayerController {
     @RequestMapping(
             value = {"/reg"},
             method = {RequestMethod.POST},
-            produces = {"application/json;charset=UTF-8"}
+            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE}
     )
     public PlayerModel registration() throws Exception {
 
@@ -85,5 +86,15 @@ public class PlayerController {
 
         return new PlayerModel(account);
 
+    }
+    @ApiOperation("Создать AI")
+    @RequestMapping(
+            value = {"/enemyAI"},
+            method = {RequestMethod.POST},
+            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE}
+    )
+    public PlayerModel createEnemy(@RequestParam String power){
+        AIUtil aiUtil = new AIUtil(new ItemController(ctx));
+        return aiUtil.createEnemy(Float.parseFloat(power));
     }
 }
