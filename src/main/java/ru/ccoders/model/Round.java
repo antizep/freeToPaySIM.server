@@ -6,6 +6,7 @@ public class Round {
     private ItemModel player1;
     private ItemModel player2;
     private Date startRound;
+    private boolean complete = false;
     public Round(){
         startRound = new Date();
     }
@@ -31,5 +32,11 @@ public class Round {
 
     public void setStartRound(Date startRound) {
         this.startRound = startRound;
+    }
+    public void fin(){
+        complete = true;
+    }
+    public boolean isComplete(){
+        return complete;
     }
 }

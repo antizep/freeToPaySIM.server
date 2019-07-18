@@ -123,12 +123,33 @@ public class FightUtil {
             newRound.setStartRound(new Date());
             battle.getRound().add(newRound);
             ItemModel usedEnemy = null;
-            if(fight.getPlayer1().equals(model)){
+            ItemModel myUse = null;
+            PlayerModel enemy = null;
+            if(fight.getPlayer1().equals(model)) {
+                enemy = fight.getPlayer2();
                 usedEnemy =  round.getPlayer2();
+
+                myUse = round.getPlayer1();
             }
             if(fight.getPlayer2().equals(model)){
+                enemy = fight.getPlayer1();
                 usedEnemy =  round.getPlayer1();
+                myUse = round.getPlayer2();
             }
+
+            if(!round.isComplete()){
+
+                round.fin();
+                int myHeals = model.getHealth() + myUse.getHeal() - usedEnemy.getDemage();
+                int enemyHeals = enemy.getHealth() + usedEnemy.getHeal() - myUse.getDemage();
+
+                model.setHealth(myHeals);
+                enemy.setHealth(enemyHeals);
+                /*todo 1)сохранить состояние моделей аппонентов
+                       2)определить завершился ли бой
+                       3)начислить вознаграждение победителю*/
+            }
+
             if(usedEnemy == null) return null;
             usedEnemy =  ItemModel.clone(usedEnemy);
             return usedEnemy;
@@ -136,7 +157,6 @@ public class FightUtil {
         return null;
 
     }
-
     private Battle getBattleFromFight(Fight fight){
 
         Battle battle = null;
