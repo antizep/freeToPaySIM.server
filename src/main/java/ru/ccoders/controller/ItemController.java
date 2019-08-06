@@ -88,5 +88,9 @@ public class ItemController {
     public List<EntityItems> addAll(List<EntityItems> items){
         return itemDao.savaAll(items);
     }
+
+    public void useItem(){
+
+    }
 }
 

@@ -1,6 +1,7 @@
 package ru.ccoders.utill;
 
 import ru.ccoders.controller.ItemController;
+import ru.ccoders.controller.PlayerController;
 import ru.ccoders.model.*;
 
 import java.util.ArrayList;
@@ -16,10 +17,12 @@ public class FightUtil {
     private static boolean aiMode = true;
     private float differencePercent = 0.1F;
     private final ItemController itemController;
+    private final PlayerController playerController;
     private final AIUtil aiUtil;
-    public FightUtil(ItemController itemController) {
+    public FightUtil(ItemController itemController, PlayerController playerController) {
         this.itemController = itemController;
         aiUtil = new AIUtil(itemController);
+        this.playerController = playerController;
     }
 
     public Fight searchFight(PlayerModel myModel) {
@@ -82,7 +85,7 @@ public class FightUtil {
 
     public boolean useItem(PlayerModel model, ItemModel item){
         Fight fight = searchFight(model);
-
+        // TODO: 06.08.2019 Удалить использованный продемет из сущьности БД 
         if(fight == null){
             return false;
         }
@@ -145,9 +148,15 @@ public class FightUtil {
 
                 model.setHealth(myHeals);
                 enemy.setHealth(enemyHeals);
-                /*todo 1)сохранить состояние моделей аппонентов
+                playerController.updateHeal(model.getId(), String.valueOf(myHeals));
+                if(!aiMode) {
+                    playerController.updateHeal(enemy.getId(), String.valueOf(enemyHeals));
+                }
+
+                /*todo 1)
                        2)определить завершился ли бой
                        3)начислить вознаграждение победителю*/
+
             }
 
             if(usedEnemy == null) return null;
@@ -206,5 +215,6 @@ public class FightUtil {
         return pow;
 
     }
+
 
 }

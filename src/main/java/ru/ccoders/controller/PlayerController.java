@@ -97,4 +97,17 @@ public class PlayerController {
         AIUtil aiUtil = new AIUtil(new ItemController(ctx));
         return aiUtil.createEnemy(Float.parseFloat(power));
     }
+
+    @ApiOperation("Обновить здоровье")
+    @RequestMapping(
+            value = {"/{id}/heal"},
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    )
+    public void updateHeal(@PathVariable int id,@RequestParam String heal){
+        int healI = Integer.parseInt(heal);
+        EntityAccount entityAccount = accountDao.load(id);
+        entityAccount.setHeal(healI);
+        accountDao.save(entityAccount);
+    }
 }

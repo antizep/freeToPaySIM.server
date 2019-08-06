@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.ccoders.model.Fight;
 import ru.ccoders.model.ItemModel;
 import ru.ccoders.model.PlayerModel;
-import ru.ccoders.model.Round;
 import ru.ccoders.utill.FightUtil;
 
 @Api(
@@ -33,7 +32,7 @@ public class FightController {
         this.ctx = ctx;
         itemController = new ItemController(ctx);
         playerController = new PlayerController(ctx);
-        fightUtil =  new FightUtil(itemController);
+        fightUtil =  new FightUtil(itemController, playerController);
     }
 
     @ApiOperation("Найти битву")

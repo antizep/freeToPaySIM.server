@@ -15,7 +15,7 @@ import java.util.Set;
 public class PlayerModel {
     private int id;
     private int health;
-    private float money;
+    private int money;
     private Set<ItemModel> items;
 
     public PlayerModel() {
@@ -45,11 +45,11 @@ public class PlayerModel {
         this.health = health;
     }
 
-    public float getMoney() {
+    public int getMoney() {
         return this.money;
     }
 
-    public void setMoney(float money) {
+    public void setMoney(int money) {
         this.money = money;
     }
 
@@ -69,6 +69,7 @@ public class PlayerModel {
         }
         throw new Exception("Item not found");
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
