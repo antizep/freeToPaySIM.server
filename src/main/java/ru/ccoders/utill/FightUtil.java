@@ -85,7 +85,7 @@ public class FightUtil {
 
     public boolean useItem(PlayerModel model, ItemModel item){
         Fight fight = searchFight(model);
-        // TODO: 06.08.2019 Удалить использованный продемет из сущьности БД 
+        playerController.useItem(model.getId(),item.getId());
         if(fight == null){
             return false;
         }
@@ -143,8 +143,18 @@ public class FightUtil {
             if(!round.isComplete()){
 
                 round.fin();
-                int myHeals = model.getHealth() + myUse.getHeal() - usedEnemy.getDemage();
-                int enemyHeals = enemy.getHealth() + usedEnemy.getHeal() - myUse.getDemage();
+                int myHeals = model.getHealth() ;
+                int enemyHeals = enemy.getHealth();
+
+                if(myUse != null){
+                    myHeals +=myUse.getHeal() ;
+                    enemyHeals -= myUse.getDemage();
+                }
+
+                if(usedEnemy != null){
+                    myHeals-= usedEnemy.getDemage();
+                    enemyHeals += usedEnemy.getHeal();
+                }
 
                 model.setHealth(myHeals);
                 enemy.setHealth(enemyHeals);

@@ -16,6 +16,7 @@ import ru.ccoders.jpa.dao.ItemDao;
 import ru.ccoders.jpa.entity.EntityDefaultItem;
 import ru.ccoders.jpa.entity.EntityItems;
 import ru.ccoders.model.ItemModel;
+import ru.ccoders.model.PlayerModel;
 import ru.ccoders.utill.ItemUtil;
 
 import java.util.HashSet;
@@ -89,8 +90,6 @@ public class ItemController {
         return itemDao.savaAll(items);
     }
 
-    public void useItem(){
 
-    }
 }
 

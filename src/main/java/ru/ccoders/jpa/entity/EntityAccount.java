@@ -60,7 +60,7 @@ public class EntityAccount {
         return result;
     }
 
-    @OneToMany(mappedBy = "accountByAccount")
+    @OneToMany(mappedBy = "accountByAccount", cascade = CascadeType.ALL)
     public Collection<EntityItems> getItemsById() {
         return itemsById;
     }

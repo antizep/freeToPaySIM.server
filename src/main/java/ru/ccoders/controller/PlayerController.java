@@ -18,12 +18,15 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.ccoders.jpa.dao.AccountDao;
 import ru.ccoders.jpa.entity.EntityAccount;
 import ru.ccoders.jpa.entity.EntityItems;
+import ru.ccoders.model.ItemModel;
 import ru.ccoders.model.PlayerModel;
 import ru.ccoders.utill.AIUtil;
 import ru.ccoders.utill.PlayerUtill;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Api(
         value = "/player",
@@ -109,5 +112,30 @@ public class PlayerController {
         EntityAccount entityAccount = accountDao.load(id);
         entityAccount.setHeal(healI);
         accountDao.save(entityAccount);
+    }
+
+    @ApiOperation("Использовать предмет")
+    @RequestMapping(
+            value = "/use/{user}/{item}",
+            method = {RequestMethod.POST},
+            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE}
+    )
+    public void useItem(@PathVariable int user,@PathVariable int item){
+        EntityAccount account = accountDao.load(user);
+        Collection<EntityItems> itemsSet = account.getItemsById();
+        for (EntityItems items: itemsSet){
+            int itemID = items.getDefaultItemByDefaultItem().getId();
+            if(itemID == item){
+                int count = items.getCount();
+                if(count == 1){
+                    itemsSet.remove(items);
+                }else{
+                    items.setCount(count-1);
+
+                    accountDao.save(account);
+                }
+                return;
+            }
+        }
     }
 }
