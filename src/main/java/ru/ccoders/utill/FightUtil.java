@@ -4,10 +4,7 @@ import ru.ccoders.controller.ItemController;
 import ru.ccoders.controller.PlayerController;
 import ru.ccoders.model.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class FightUtil {
 
@@ -89,7 +86,7 @@ public class FightUtil {
         if(fight == null){
             return false;
         }
-
+        //todo здесь баг не удаляет последний итем
         Round actualRound = getLastRoundFromFight(fight);
 
         if(fight.getPlayer2().equals(model)) {
@@ -162,6 +159,13 @@ public class FightUtil {
                 if(!aiMode) {
                     playerController.updateHeal(enemy.getId(), String.valueOf(enemyHeals));
                 }
+                if(myHeals <=0){
+                    /**todo lose По идее можно ничего не делать т.к. Unity определит по здоровью*/
+
+                }
+                if(enemyHeals <= 0){
+                    winer(battle, model);
+                }
 
                 /*todo 1)
                        2)определить завершился ли бой
@@ -226,5 +230,46 @@ public class FightUtil {
 
     }
 
+    private void winer(Battle battle, PlayerModel winer){
+        int position ;
+        if(battle.getFight().getPlayer2().equals(winer)){
+            position = 1;
+        }else{
+            position = 2;
+        }
+        List <Round> rounda = battle.getRound();
+        List<ItemModel> winerItems = new ArrayList<>();
+        List<ItemModel> enemyItems = new ArrayList<>();
+        for (Round r: rounda){
+            switch (position){
+                case 1:
+                    addPrize(winerItems,r.getPlayer1());
+                    addPrize(enemyItems,r.getPlayer2());
+                    break;
+                case 2:
+                    addPrize(winerItems,r.getPlayer2());
+                    addPrize(enemyItems,r.getPlayer1());
+                    break;
+            }
+        }
+        Random random = new Random();
+
+        int randCount = random.nextInt(enemyItems.size());
+        List<ItemModel> prize = new ArrayList<>();
+        for (int i = 0; i < randCount; i++) {
+            ItemModel p = enemyItems.get(random.nextInt(enemyItems.size()-1));
+            prize.add(p);
+            enemyItems.remove(p);
+        }
+        //нужна модель в которую заложить оповещение о победе и трофеи
+    }
+
+    private void addPrize(List<ItemModel> collection, ItemModel item){
+
+        if(item.getHeal()== 0){
+            collection.add(item);
+        }
+
+    }
 
 }
