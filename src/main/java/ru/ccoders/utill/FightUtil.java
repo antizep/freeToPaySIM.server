@@ -231,6 +231,7 @@ public class FightUtil {
     }
 
     private void winer(Battle battle, PlayerModel winer){
+    	battle.setEnded(true);
         int position ;
         if(battle.getFight().getPlayer2().equals(winer)){
             position = 1;

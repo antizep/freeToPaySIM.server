@@ -7,6 +7,8 @@ package ru.ccoders.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
@@ -34,6 +36,7 @@ import java.util.Set;
 )
 @RestController
 @RequestMapping({"/player"})
+@Slf4j
 public class PlayerController {
     private final ApplicationContext ctx;
     private final AccountDao accountDao;
@@ -52,6 +55,7 @@ public class PlayerController {
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE}
     )
     public PlayerModel load(@PathVariable int id) {
+    	log.info("load(@PathVariable int "+id+")");
         return new PlayerModel(accountDao.load(id));
     }
 
@@ -62,7 +66,7 @@ public class PlayerController {
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE}
     )
     public PlayerModel registration() throws Exception {
-
+    	log.info("registration()");
         ItemController itemController = new ItemController(ctx);
 
         EntityAccount account = new EntityAccount();
@@ -97,6 +101,7 @@ public class PlayerController {
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE}
     )
     public PlayerModel createEnemy(@RequestParam String power){
+    	log.info("createEnemy(@RequestParam String "+power+")");
         AIUtil aiUtil = new AIUtil(new ItemController(ctx));
         return aiUtil.createEnemy(Float.parseFloat(power));
     }
@@ -108,6 +113,7 @@ public class PlayerController {
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE
     )
     public void updateHeal(@PathVariable int id,@RequestParam String heal){
+    	log.info("updateHeal(@PathVariable int "+id+",@RequestParam String "+heal+")");
         int healI = Integer.parseInt(heal);
         EntityAccount entityAccount = accountDao.load(id);
         entityAccount.setHeal(healI);
@@ -121,6 +127,7 @@ public class PlayerController {
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE}
     )
     public void useItem(@PathVariable int user,@PathVariable int item){
+    	log.info("useItem(@PathVariable int "+user+",@PathVariable int "+item+")");
         EntityAccount account = accountDao.load(user);
         Collection<EntityItems> itemsSet = account.getItemsById();
         for (EntityItems items: itemsSet){

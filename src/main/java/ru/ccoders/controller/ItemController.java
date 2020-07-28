@@ -7,6 +7,8 @@ package ru.ccoders.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
@@ -29,6 +31,7 @@ import java.util.Set;
 )
 @RestController
 @RequestMapping({"/item"})
+@Slf4j
 public class ItemController {
     private final ApplicationContext ctx;
     private final ItemUtil iu;
@@ -47,8 +50,9 @@ public class ItemController {
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE}
     )
     public ItemModel random() {
+    	log.info("random()");
         ItemModel result = iu.getRandomItem();
-        System.out.println("return item id:"+result.getId());
+        log.info("return item id:"+result.getId());
         return result;
     }
 
@@ -59,7 +63,9 @@ public class ItemController {
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE}
     )
     public Set<ItemModel> randomSet(@RequestParam("power") int power){
-        Set<ItemModel> randomSet = new HashSet<>();
+        
+    	log.info("randomSet(@RequestParam(\"power\") int "+power+")");
+    	Set<ItemModel> randomSet = new HashSet<>();
         int totalPower = 0;
         while (totalPower <= power) {
             ItemModel randModel = random();
@@ -77,7 +83,8 @@ public class ItemController {
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE}
     )
     public EntityDefaultItem getItem(@PathVariable(name = "name")String name) throws Exception {
-        return iu.getByName(name);
+        log.info("getItem(@PathVariable(name = \"name\")String "+name+")");
+    	return iu.getByName(name);
     }
 
     @ApiOperation("Добавить предметы пользователю")
@@ -87,7 +94,8 @@ public class ItemController {
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE}
     )
     public List<EntityItems> addAll(List<EntityItems> items){
-        return itemDao.savaAll(items);
+    	log.info("addAll(List<EntityItems> "+items+")");
+    	return itemDao.savaAll(items);
     }
 
 

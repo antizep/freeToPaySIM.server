@@ -46,4 +46,9 @@ dependencies {
     compile group: 'com.jcabi', name: 'jcabi-manifests', version: '1.1'
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.1.7.RELEASE'
     testCompile("junit:junit")
+    
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+	annotationProcessor 'org.projectlombok:lombok:1.18.12'
+		testCompileOnly 'org.projectlombok:lombok:1.18.12'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
 }
