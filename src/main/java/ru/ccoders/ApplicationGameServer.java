@@ -17,15 +17,15 @@ import org.springframework.core.env.Environment;
 
 @ComponentScan
 @EnableAutoConfiguration
-public class Application {
+public class ApplicationGameServer {
     @Autowired
     Environment environment;
 
-    public Application() {
+    public ApplicationGameServer() {
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, new String[0]);
+        SpringApplication.run(ApplicationGameServer.class, new String[0]);
     }
 
     @Bean
