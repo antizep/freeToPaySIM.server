@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Foo-Version: 0.4.14
+Main-Class: org.springframework.boot.loader.JarLauncher
+Start-Class: ru.ccoders.ApplicationGameServer
+Spring-Boot-Version: 2.1.7.RELEASE
+Spring-Boot-Classes: BOOT-INF/classes/
+Spring-Boot-Lib: BOOT-INF/lib/
+

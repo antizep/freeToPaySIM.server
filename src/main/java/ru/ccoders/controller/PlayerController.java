@@ -41,10 +41,12 @@ public class PlayerController {
     private final ApplicationContext ctx;
     private final AccountDao accountDao;
     private PlayerUtill playerUtill = new PlayerUtill();
-
+    ItemController itemController;
+    
     @Autowired
     public PlayerController(ApplicationContext ctx) {
         this.ctx = ctx;
+        itemController  = new ItemController(ctx);
         accountDao = (AccountDao) ctx.getBean("jpaAccount");
     }
 
@@ -58,6 +60,35 @@ public class PlayerController {
     	log.info("load(@PathVariable int "+id+")");
         return new PlayerModel(accountDao.load(id));
     }
+    
+    @ApiOperation("vine game profile")
+    @RequestMapping(
+            value = {"/{id}/vine"},
+            method = {RequestMethod.GET},
+            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE}
+    )
+    public PlayerModel vine(@PathVariable int id) throws Exception {
+    	log.info("load(@PathVariable int "+id+")");
+    	EntityAccount account = accountDao.load(id);
+    	account.setHeal(100);
+    	Collection<EntityItems> items = account.getItemsById();
+
+        EntityItems entityItems = new EntityItems();
+        entityItems.setCount(10);
+        entityItems.setDefaultItemByDefaultItem(itemController.getItem("STONE"));
+        entityItems.setAccountByAccount(account);
+        items.add(entityItems);
+        entityItems = new EntityItems();
+        entityItems.setCount(10);
+        entityItems.setDefaultItemByDefaultItem(itemController.getItem("PLANTAIN"));
+        entityItems.setAccountByAccount(account);
+
+        items.add(entityItems);
+        
+        account.setItemsById(items);
+        
+        return new PlayerModel(accountDao.save(account));
+    }
 
     @ApiOperation("Создать профиль")
     @RequestMapping(
@@ -67,7 +98,7 @@ public class PlayerController {
     )
     public PlayerModel registration() throws Exception {
     	log.info("registration()");
-        ItemController itemController = new ItemController(ctx);
+        
 
         EntityAccount account = new EntityAccount();
         account.setHeal(100);
