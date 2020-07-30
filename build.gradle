@@ -11,13 +11,13 @@ buildscript {
 }
 
 apply plugin: 'java'
-apply plugin: 'idea'
+apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 
 version = '0.4.14'
 bootJar {
 
-    mainClassName = 'main.Application'
+    mainClassName = 'ru.ccoders.ApplicationGameServer'
     manifest{
         attributes 'Foo-Version': version
     }
