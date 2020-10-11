@@ -8,7 +8,7 @@ import java.util.*;
 
 public class FightUtil {
 
-    public static final long ROUND_LENGTH = 300000;
+    public static final long ROUND_LENGTH = 30000;
     private static List<Fight> fights = new LinkedList<>();
     private static List<Battle> battles = new ArrayList<>();
     private static boolean aiMode = true;
@@ -110,15 +110,19 @@ public class FightUtil {
         }
 
         Round round = getLastRoundFromFight(fight);
+        
         if(aiMode){
-            round.setPlayer2(aiUtil.getRandMove(fight.getPlayer2()));
+        	if(round.getPlayer1() != null || round.getPlayer2() == null) {
+        		round.setPlayer2(aiUtil.getRandMove(fight.getPlayer2()));
+        	}
         }
-
+       
         boolean twoUse = (round.getPlayer2() != null && round.getPlayer1() != null);
         long et = round.getStartRound().getTime() + ROUND_LENGTH;
         Date thisTime = new Date();
         if(twoUse || et <= thisTime.getTime()){
-            Battle battle = getBattleFromFight(fight);
+        	
+        	Battle battle = getBattleFromFight(fight);
             Round newRound = new Round();
             newRound.setStartRound(new Date());
             battle.getRound().add(newRound);
