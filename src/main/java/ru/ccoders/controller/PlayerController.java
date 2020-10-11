@@ -58,7 +58,18 @@ public class PlayerController {
     )
     public PlayerModel load(@PathVariable int id) {
     	log.info("load(@PathVariable int "+id+")");
-        return new PlayerModel(accountDao.load(id));
+    	EntityAccount account = accountDao.load(id);
+    	if(account == null) {
+    		try {
+    			return registration();
+    		}catch (Exception e) {
+    			log.warn("не удалось создать аккаунт",e);
+				return null;
+			}
+    	}else {
+            return new PlayerModel(account);
+
+		}
     }
     
     @ApiOperation("vine game profile")
