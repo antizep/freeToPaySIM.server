@@ -102,7 +102,7 @@ public class FightUtil {
         return true;
     }
 
-    public ItemModel isFinal(PlayerModel model){
+    public ResultRound isFinal(PlayerModel model){
 
         Fight fight = searchFight(model);
         if(fight == null){
@@ -175,7 +175,9 @@ public class FightUtil {
 
             if(usedEnemy == null) return null;
             usedEnemy =  ItemModel.clone(usedEnemy);
-            return usedEnemy;
+            ResultRound resultRound = new ResultRound();
+            resultRound.setUseEnemy(usedEnemy);
+            return resultRound;
         }
         return null;
 
@@ -231,6 +233,8 @@ public class FightUtil {
     }
 
     private void winer(Battle battle, PlayerModel winer){
+    	
+ 
     	battle.setEnded(true);
         int position ;
         if(battle.getFight().getPlayer2().equals(winer)){

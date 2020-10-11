@@ -8,6 +8,7 @@ import ru.ccoders.jpa.repository.AccountRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service("jpaAccount")
@@ -28,7 +29,11 @@ public class AccountDao {
                 return account;
             }
         }
-        EntityAccount account = repository.findById(id).get();
+        Optional<EntityAccount> aOptional = repository.findById(id);
+        if(aOptional.isEmpty()) {
+        	return null;
+        }
+        EntityAccount account = aOptional.get();
         cacheAccounts.add(account);
         return account;
     }

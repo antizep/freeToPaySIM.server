@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.ccoders.model.Fight;
 import ru.ccoders.model.ItemModel;
 import ru.ccoders.model.PlayerModel;
+import ru.ccoders.model.ResultRound;
 import ru.ccoders.utill.FightUtil;
 
 @Api(
@@ -46,8 +47,11 @@ public class FightController {
     )
     public boolean searchEnemy(@RequestParam(name = "id") String id) {
     	log.info("searchEnemy(@RequestParam(name = \"id\") String "+id+")");
+    	try {
     	playerModel = playerController.load(Integer.parseInt(id));
-
+    	}catch (Exception e) {
+    		log.warn("не найден пользователь:"+id+"",e);
+		}
         Fight myFight = fightUtil.searchFight(playerModel);
         return (myFight.getPlayer1() != null && myFight.getPlayer2() != null);
 
@@ -69,7 +73,7 @@ public class FightController {
             method = {RequestMethod.GET},
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE}
     )
-    public ItemModel endRound(@PathVariable(name = "userId")int userId){
+    public ResultRound endRound(@PathVariable(name = "userId")int userId){
     	log.info("endRound(@PathVariable(name = \"userId\")int "+userId+")");
     	playerModel = playerController.load(userId);
 

@@ -56,7 +56,7 @@ public class ItemController {
         return result;
     }
 
-    @ApiOperation("Получить сет случайных предметов на мощность")
+    @ApiOperation("Получить сет случайных предауаметов на мощность")
     @RequestMapping(
             value = "/power",
             method = {RequestMethod.GET},
