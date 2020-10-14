@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.ccoders.jpa.entity.EntityItems;
 import ru.ccoders.jpa.repository.ItemRepository;
 
+import java.util.Collection;
 import java.util.List;
 
 @Service("jpaItem")

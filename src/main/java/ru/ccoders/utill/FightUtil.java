@@ -2,10 +2,14 @@ package ru.ccoders.utill;
 
 import ru.ccoders.controller.ItemController;
 import ru.ccoders.controller.PlayerController;
+import ru.ccoders.jpa.entity.EntityItems;
 import ru.ccoders.model.*;
 
 import java.util.*;
 
+import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 public class FightUtil {
 
     public static final long ROUND_LENGTH = 30000;
@@ -86,7 +90,7 @@ public class FightUtil {
         if(fight == null){
             return false;
         }
-        //todo здесь баг не удаляет последний итем
+        
         Round actualRound = getLastRoundFromFight(fight);
 
         if(fight.getPlayer2().equals(model)) {
@@ -103,7 +107,7 @@ public class FightUtil {
     }
 
     public ResultRound isFinal(PlayerModel model){
-
+    	ResultRound resultRound = new ResultRound();
         Fight fight = searchFight(model);
         if(fight == null){
             return null;
@@ -156,7 +160,8 @@ public class FightUtil {
                     myHeals-= usedEnemy.getDemage();
                     enemyHeals += usedEnemy.getHeal();
                 }
-
+                log.info("u hp:"+myHeals);
+                log.info("e hp:"+enemyHeals);
                 model.setHealth(myHeals);
                 enemy.setHealth(enemyHeals);
                 playerController.updateHeal(model.getId(), String.valueOf(myHeals));
@@ -168,7 +173,9 @@ public class FightUtil {
 
                 }
                 if(enemyHeals <= 0){
-                    winer(battle, model);
+                    
+                    resultRound.setTrophy(winer(battle, model));
+                    fights.remove(fight);
                 }
 
                 /*todo 1)
@@ -179,7 +186,7 @@ public class FightUtil {
 
             if(usedEnemy == null) return null;
             usedEnemy =  ItemModel.clone(usedEnemy);
-            ResultRound resultRound = new ResultRound();
+            
             resultRound.setUseEnemy(usedEnemy);
             return resultRound;
         }
@@ -231,14 +238,12 @@ public class FightUtil {
             pow += item.getHeal() * item.getCount();
 
         }
-
         return pow;
 
     }
 
-    private void winer(Battle battle, PlayerModel winer){
+    private List<ItemModel> winer(Battle battle, PlayerModel winer){
     	
- 
     	battle.setEnded(true);
         int position ;
         if(battle.getFight().getPlayer2().equals(winer)){
@@ -248,29 +253,23 @@ public class FightUtil {
         }
         List <Round> rounda = battle.getRound();
         List<ItemModel> winerItems = new ArrayList<>();
-        List<ItemModel> enemyItems = new ArrayList<>();
+        List<String> itemDefIds = new ArrayList<String>();
         for (Round r: rounda){
-            switch (position){
-                case 1:
-                    addPrize(winerItems,r.getPlayer1());
-                    addPrize(enemyItems,r.getPlayer2());
-                    break;
-                case 2:
-                    addPrize(winerItems,r.getPlayer2());
-                    addPrize(enemyItems,r.getPlayer1());
-                    break;
-            }
+        	ItemModel p1= r.getPlayer1();
+        	ItemModel p2= r.getPlayer2();
+        	if(p1!=null) {
+        		winerItems.add(p1);
+        		itemDefIds.add(String.valueOf(p1.getId()));
+            	
+        	}
+        	if(p2!=null) {
+        		winerItems.add(p2);
+        		itemDefIds.add(String.valueOf(p2.getId()));
+        	}
         }
-        Random random = new Random();
-
-        int randCount = random.nextInt(enemyItems.size());
-        List<ItemModel> prize = new ArrayList<>();
-        for (int i = 0; i < randCount; i++) {
-            ItemModel p = enemyItems.get(random.nextInt(enemyItems.size()-1));
-            prize.add(p);
-            enemyItems.remove(p);
-        }
-        //нужна модель в которую заложить оповещение о победе и трофеи
+        playerController.addItemUserFromDefoltItemIds(itemDefIds, winer.getId());
+        
+        return winerItems;
     }
 
     private void addPrize(List<ItemModel> collection, ItemModel item){

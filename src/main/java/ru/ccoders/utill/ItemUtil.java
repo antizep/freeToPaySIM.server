@@ -59,6 +59,16 @@ public class ItemUtil {
         }
         throw new Exception("Обьект не найден");
     }
+    public EntityDefaultItem getById(int id) {
+		for (EntityDefaultItem entityDefaultItem : defaultItems) {
+			if(entityDefaultItem.getId() == id) {
+				return entityDefaultItem;
+			}
+			
+		}
+		return null;
+	}
+    
     private void init(){
         EntityDefaultItem entityDefaultItem = new EntityDefaultItem();
         entityDefaultItem.setName("KNIFE");

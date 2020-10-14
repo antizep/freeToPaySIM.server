@@ -3,7 +3,8 @@ package ru.ccoders.jpa.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "items", schema = "public", catalog = "postgres")
+@Table(name = "items", schema = "public", catalog = "postgres",
+uniqueConstraints = {@UniqueConstraint(columnNames = {"account", "default_item"})})
 public class EntityItems {
     private int id;
     private int count;
@@ -70,4 +71,8 @@ public class EntityItems {
     public void setDefaultItemByDefaultItem(EntityDefaultItem defaultItemByDefaultItem) {
         this.defaultItemByDefaultItem = defaultItemByDefaultItem;
     }
+    
+    public void addCount(int c) {
+		count+=c;
+	}
 }

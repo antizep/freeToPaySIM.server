@@ -1,6 +1,10 @@
 package ru.ccoders.jpa.entity;
 
 import javax.persistence.*;
+
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
 import java.util.Collection;
 
 @Entity
@@ -59,8 +63,8 @@ public class EntityAccount {
         int result = id;
         return result;
     }
-
-    @OneToMany(mappedBy = "accountByAccount", cascade = CascadeType.ALL)
+    @NotFound(action = NotFoundAction.IGNORE)
+    @OneToMany(mappedBy = "accountByAccount", cascade = CascadeType.ALL,orphanRemoval = true)
     public Collection<EntityItems> getItemsById() {
         return itemsById;
     }

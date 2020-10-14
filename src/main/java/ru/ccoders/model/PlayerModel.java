@@ -26,6 +26,9 @@ public class PlayerModel {
         money = account.getMoney();
         items = new HashSet<>();
         for (EntityItems i: account.getItemsById()){
+        	if(i.getCount() <= 0) {
+        		continue;
+        	}
             items.add(new ItemModel(i.getDefaultItemByDefaultItem(),i.getCount()));
         }
     }

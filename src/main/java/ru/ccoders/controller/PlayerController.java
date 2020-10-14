@@ -17,8 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import ch.qos.logback.core.encoder.EchoEncoder;
 import ru.ccoders.jpa.dao.AccountDao;
 import ru.ccoders.jpa.entity.EntityAccount;
+import ru.ccoders.jpa.entity.EntityDefaultItem;
 import ru.ccoders.jpa.entity.EntityItems;
 import ru.ccoders.model.ItemModel;
 import ru.ccoders.model.PlayerModel;
@@ -27,7 +30,9 @@ import ru.ccoders.utill.PlayerUtill;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Api(
@@ -82,16 +87,17 @@ public class PlayerController {
     	log.info("load(@PathVariable int "+id+")");
     	EntityAccount account = accountDao.load(id);
     	account.setHeal(100);
+    	account.getItemsById().clear();
     	Collection<EntityItems> items = account.getItemsById();
 
         EntityItems entityItems = new EntityItems();
         entityItems.setCount(10);
-        entityItems.setDefaultItemByDefaultItem(itemController.getItem("STONE"));
+        entityItems.setDefaultItemByDefaultItem(itemController.getItemByName("STONE"));
         entityItems.setAccountByAccount(account);
         items.add(entityItems);
         entityItems = new EntityItems();
         entityItems.setCount(10);
-        entityItems.setDefaultItemByDefaultItem(itemController.getItem("PLANTAIN"));
+        entityItems.setDefaultItemByDefaultItem(itemController.getItemByName("PLANTAIN"));
         entityItems.setAccountByAccount(account);
 
         items.add(entityItems);
@@ -119,12 +125,12 @@ public class PlayerController {
 
         EntityItems entityItems = new EntityItems();
         entityItems.setCount(10);
-        entityItems.setDefaultItemByDefaultItem(itemController.getItem("STONE"));
+        entityItems.setDefaultItemByDefaultItem(itemController.getItemByName("STONE"));
         entityItems.setAccountByAccount(account);
         items.add(entityItems);
         entityItems = new EntityItems();
         entityItems.setCount(10);
-        entityItems.setDefaultItemByDefaultItem(itemController.getItem("PLANTAIN"));
+        entityItems.setDefaultItemByDefaultItem(itemController.getItemByName("PLANTAIN"));
         entityItems.setAccountByAccount(account);
 
         items.add(entityItems);
@@ -176,15 +182,62 @@ public class PlayerController {
             int itemID = items.getDefaultItemByDefaultItem().getId();
             if(itemID == item){
                 int count = items.getCount();
-                if(count == 1){
-                    itemsSet.remove(items);
-                }else{
                     items.setCount(count-1);
-
-                    accountDao.save(account);
                 }
+                accountDao.save(account);
                 return;
             }
-        }
     }
+    
+    
+    @ApiOperation("Добавить пременты по списку id дефолтных ")
+    @RequestMapping(
+    		value = "/{user}/addIems",
+    		method = {RequestMethod.POST},
+    		produces = {MediaType.APPLICATION_JSON_UTF8_VALUE}
+    )
+    public void addItemUserFromDefoltItemIds(@RequestParam List<String> idsDefoltItem,@PathVariable int userId) {
+    	log.info("addItemUserFromDefoltItemIds "+ idsDefoltItem+"|"+userId);
+
+    	EntityAccount account = accountDao.load(userId);
+    	Map<Integer,Integer> defMapCount = new HashMap();
+    	for (String idS : idsDefoltItem) {
+    		try {
+				
+			
+    		if(defMapCount.containsKey(idS)) {
+    			defMapCount.put(Integer.parseInt(idS), defMapCount.get(idS)+1);
+    		}else {
+    			defMapCount.put(Integer.parseInt(idS), 1);
+    		}
+    		} catch (Exception e) {
+				log.warn("Не удалось преобразовать ID",e);
+			}
+    	}	
+    	
+		Collection<EntityItems> eItems = account.getItemsById();
+		for (EntityItems items : eItems) {
+			int idDef = items.getDefaultItemByDefaultItem().getId();
+			if(defMapCount.containsKey(idDef)) {
+			int c = defMapCount.get(idDef);
+			
+			if(c>0) {
+				items.addCount(c);;
+			}
+			defMapCount.remove(idDef);
+			}
+		}
+		Set<Integer> keys = defMapCount.keySet(); 
+		if(!defMapCount.isEmpty()) {
+			for (Integer integer : keys) {
+				EntityItems entityItems = new EntityItems();
+				entityItems.setAccountByAccount(account);
+				entityItems.setCount(defMapCount.get(integer));
+				entityItems.setDefaultItemByDefaultItem(itemController.getItemById(String.valueOf(integer)));
+				eItems.add(entityItems);
+			}
+		}
+		itemController.addAll(new ArrayList<EntityItems>(eItems));
+    }
+
 }

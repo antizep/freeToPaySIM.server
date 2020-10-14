@@ -23,7 +23,8 @@ public class AIUtil {
         PlayerModel enemyAi = new PlayerModel();
         enemyAi.setId(-1);
         float percentHealth = (float) (50 + random.nextInt(30) )/ 100F;
-        int health = (int) (power * percentHealth);
+        //int health = (int) (power * percentHealth);
+        int health = 1;
         enemyAi.setHealth(health);
         System.out.println((power - health));
         enemyAi.setItems(controller.randomSet((int) (power - health)));

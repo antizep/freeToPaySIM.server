@@ -21,6 +21,7 @@ import ru.ccoders.model.ItemModel;
 import ru.ccoders.model.PlayerModel;
 import ru.ccoders.utill.ItemUtil;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -82,9 +83,27 @@ public class ItemController {
             method = {RequestMethod.GET},
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE}
     )
-    public EntityDefaultItem getItem(@PathVariable(name = "name")String name) throws Exception {
+    public EntityDefaultItem getItemByName(@PathVariable(name = "name")String name) throws Exception {
         log.info("getItem(@PathVariable(name = \"name\")String "+name+")");
     	return iu.getByName(name);
+    }
+    @ApiOperation("Получить предмет по ID")
+    @RequestMapping(
+            value = "/id/{id}",
+            method = {RequestMethod.GET},
+            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE}
+    )
+    public EntityDefaultItem getItemById(@PathVariable(name = "name")String id){
+        log.info("getItem(@PathVariable(id{id}= \"name\")String "+id+")");
+        
+        try {
+            return iu.getById(Integer.parseInt(id));
+		} catch (Exception e) {
+			log.warn("Не удалось найти предмет");
+			return null;
+		}
+        
+    
     }
 
     @ApiOperation("Добавить предметы пользователю")
@@ -97,6 +116,8 @@ public class ItemController {
     	log.info("addAll(List<EntityItems> "+items+")");
     	return itemDao.savaAll(items);
     }
+    
+
 
 
 }
